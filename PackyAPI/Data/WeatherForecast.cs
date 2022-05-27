@@ -1,4 +1,4 @@
-namespace PackyAPI
+namespace PackyAPI.Data
 {
     public class WeatherForecast
     {

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PackyAPI.Data;
 
 namespace PackyAPI.Controllers
 {
@@ -30,7 +31,7 @@ namespace PackyAPI.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
-            
         }
+        
     }
 }
