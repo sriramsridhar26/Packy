@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PackyAPI.Data;
 using PackyAPI.Configurations;
+using PackyAPI.Repository;
+using PackyAPI.IRepository;
 
 var logger = NLog.LogManager.Setup()
                             .LoadConfigurationFromAppSettings()
@@ -19,7 +21,6 @@ try {
     builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
-
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
@@ -35,7 +36,9 @@ try {
          .AllowAnyHeader());
     });
     builder.Services.AddAutoMapper(typeof(MapperInitializer));
-
+    builder.Services.AddScoped<IUnitofWork, UnitofWork>();
+    builder.Services.AddControllers().AddNewtonsoftJson(op =>
+                           op.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
