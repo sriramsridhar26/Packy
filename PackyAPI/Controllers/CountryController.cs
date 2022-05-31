@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PackyAPI.IRepository;
 using PackyAPI.Models;
@@ -52,6 +51,7 @@ namespace PackyAPI.Controllers
             {
                 _logger.LogError($"Something went wrong while calling {nameof(GetCountries)}");
                 return StatusCode(500, "Internal Server Error Pwease try later");
+                //return StatusCode(500, "Internal Server Error Pwease try later");
             }
         }
     }
