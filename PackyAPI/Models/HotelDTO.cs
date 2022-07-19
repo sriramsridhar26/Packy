@@ -13,7 +13,7 @@ namespace PackyAPI.Models
         [Required]
         [Range(0, 5)]
         public double Rating { get; set; }
-        [Required]
+        //[Required]
         public int CountryId { get; set; }
 
     }
@@ -21,6 +21,12 @@ namespace PackyAPI.Models
     {
         public int Id { get; set; }
         public CountryDTO Country { get; set; }
+
+    }
+
+    public class UpdateHotelDTO : CreateHotelDTO
+    {
+
 
     }
 }

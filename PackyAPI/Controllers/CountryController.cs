@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using PackyAPI.Data;
 using PackyAPI.IRepository;
 using PackyAPI.Models;
 
@@ -37,7 +38,7 @@ namespace PackyAPI.Controllers
                 return StatusCode(500, "Internal Server Error Pwease try later");
             }
         }
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name ="GetCountry")]
         public async Task<IActionResult> GetCountry(int id)
         {
             try
@@ -54,5 +55,62 @@ namespace PackyAPI.Controllers
                 //return StatusCode(500, "Internal Server Error Pwease try later");
             }
         }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateCountry([FromBody] CreateCountryDTO country)
+        {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogInformation($"Create Hotel failed");
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var countr = _mapper.Map<Country>(country);
+                await _unitofwork.Countries.Insert(countr);
+                await _unitofwork.Save();
+                return CreatedAtRoute("GetHotel", new { id = countr.Id }, countr);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Internal server error");
+            }
+        }
+
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateCountry(int id, [FromBody] UpdateCountryDTO country)
+        {
+            if (!ModelState.IsValid || id < 1)
+            {
+                _logger.LogInformation($"Update Hotel failed");
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var countr = await _unitofwork.Countries.Get(q => q.Id == id);
+                if (countr == null)
+                {
+                    return BadRequest("submitted req does not exist");
+                }
+                else
+                {
+                    _mapper.Map(country, countr);
+                    _unitofwork.Countries.Update(countr);
+                    _unitofwork.Save();
+                    return CreatedAtRoute("GetCountry", new { id = countr.Id }, countr);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Internal server error");
+            }
+        }
+
+
     }
 }

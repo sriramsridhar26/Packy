@@ -12,6 +12,10 @@ namespace PackyAPI.Models
         [StringLength(maximumLength: 3, ErrorMessage = "Short form too long")]
         public string shortname { get; set; }
     }
+    public class UpdateCountryDTO : CreateCountryDTO
+    {
+        public virtual IList<CreateHotelDTO> Hotels { get; set; }
+    }
     public class CountryDTO : CreateCountryDTO
     {
         public int Id { get; set; }

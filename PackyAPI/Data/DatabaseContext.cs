@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using PackyAPI.Configurations.Entities;
 
 namespace PackyAPI.Data
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : IdentityDbContext<ApiUser>
     {
         public DatabaseContext(DbContextOptions options) : base(options)
         {
@@ -12,6 +14,8 @@ namespace PackyAPI.Data
         public DbSet<Hotel> Hotels { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.Entity<Country>().HasData(
                 new Country
                 {
@@ -74,5 +78,7 @@ namespace PackyAPI.Data
                 }
                 );
         }
+
+
     }
 }
